@@ -19,6 +19,12 @@ export class Message {
 
   toString () {
     let time = new Date()
-    return `${time} <${this.username}> (${this.command}): ${this.contents}`
+    if (this.command === 'echo') {
+      return `${time} <${this.username}> (${this.command}): ${this.contents}`
+    } else if (this.command === 'broadcast') {
+      return `${time} <${this.username}> (${this.command}): ${this.contents}`
+    } else if (this.command === 'users') {
+      return `${this.contents}`
+    }
   }
 }
