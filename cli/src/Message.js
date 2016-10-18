@@ -18,6 +18,7 @@ export class Message {
   }
 
   toString () {
-    return this.contents
+    let time = new Date()
+    return `${time} <${this.username}> (${this.command}): ${this.contents}`
   }
 }
