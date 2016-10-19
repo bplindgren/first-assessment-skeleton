@@ -21,19 +21,21 @@ export class Message {
 
   toString () {
     let time = new Date()
-    switch (this.command) {
-      case ('echo'):
+    switch (true) {
+      case (this.command === 'echo'):
         return colors.green(`${time} <${this.username}> (${this.command}): ${this.contents}`)
-      case ('broadcast'):
+      case (this.command === 'broadcast'):
         return colors.america(`${time}: <${this.username}> (all): ${this.contents}`)
-      case ('users') :
+      case (this.command === 'users') :
         return colors.white(`${time}: currently connected users: \n${this.contents}`)
-      case ('connect') :
+      case (this.command === 'connect') :
         return colors.blue(`${time}: <${this.username}> has connected`)
-      case ('disconnect'):
+      case (this.command === 'disconnect'):
         return colors.red(`${time}: <${this.username}> has disconnected`)
-      default:
+      case (this.command[0] === '@'):
         return colors.cyan(`${time}: <${this.username}> (whisper): ${this.contents}`)
+      default:
+        return 'hey'
     }
   }
 

@@ -49,37 +49,31 @@ cli
     })
   })
   .action(function (input, callback) {
-    const [ command, ...rest ] = words(input)
+    const [ command, ...rest ] = words(input, /[^, ]+/g)
     const contents = rest.join(' ')
 
-    // console.log(previousCommand)
-
-    console.log(command)
-    switch (command) {
-      case 'disconnect':
+    switch (true) {
+      case (command === 'disconnect'):
         server.end(new Message({ username, command }).toJSON() + '\n')
         break
-      case 'echo':
-        console.log(previousCommand)
+      case (command === 'echo'):
         previousCommand = 'echo'
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
-      case 'broadcast':
-        // console.log(previousCommand)
-        previousCommand = 'broadcast'
+      case (command === 'broadcast'):
+        previousCommand = command
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
-      case 'users':
+      case (command === 'users'):
+        previousCommand = command
         server.write(new Message({ username, command }).toJSON() + '\n')
+        break
+      case (command[0] === '@'):
+        server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
       case (previousCommand !== null):
         server.write(new Message({ username, previousCommand, command }).toJSON() + '\n')
         break
-      // case (startsWith(command, '@', 0)):
-      //   console.log('here')
-      //   let newCommand = 'atUser'
-      //   server.write(new Message({ username, newCommand, contents }).toJSON()) + '\n'
-      //   break
       default:
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
     }
