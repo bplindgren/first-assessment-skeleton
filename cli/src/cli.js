@@ -57,7 +57,7 @@ cli
         server.end(new Message({ username, command }).toJSON() + '\n')
         break
       case (command === 'echo'):
-        previousCommand = 'echo'
+        previousCommand = command
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
       case (command === 'broadcast'):
@@ -72,10 +72,12 @@ cli
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
       case (previousCommand !== null):
-        server.write(new Message({ username, previousCommand, command }).toJSON() + '\n')
+        this.log('here')
+        let newCommand = 'echo'
+        server.write(new Message({ username, newCommand, contents }).toJSON() + '\n')
         break
       default:
-        server.write(new Message({ username, command, contents }).toJSON() + '\n')
+        this.log(`Command <${command}> was not recognized`)
     }
 
     callback()
