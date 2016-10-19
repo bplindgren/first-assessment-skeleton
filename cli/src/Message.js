@@ -21,18 +21,20 @@ export class Message {
 
   toString () {
     let time = new Date()
-    if (this.command === 'echo') {
-      return colors.green(`${time} <${this.username}> (${this.command}): ${this.contents}`)
-    } else if (this.command === 'broadcast') {
-      return colors.america(`${time} <${this.username}> (all): ${this.contents}`)
-    } else if (this.command === 'users') {
-      return colors.white(`${time}: currently connected users: \n${this.contents}`)
-    } else if (this.command === 'connect') {
-      return colors.blue(`${time}: <${this.username}> has connected`)
-    } else if (this.command === 'disconnect') {
-      return colors.red(`${time}: <${this.username}> has disconnected`)
-    } else {
-      return colors.cyan(`${time}: <${this.username}> (whisper): ${this.contents}`)
+    switch (this.command) {
+      case ('echo'):
+        return colors.green(`${time} <${this.username}> (${this.command}): ${this.contents}`)
+      case ('broadcast'):
+        return colors.america(`${time}: <${this.username}> (all): ${this.contents}`)
+      case ('users') :
+        return colors.white(`${time}: currently connected users: \n${this.contents}`)
+      case ('connect') :
+        return colors.blue(`${time}: <${this.username}> has connected`)
+      case ('disconnect'):
+        return colors.red(`${time}: <${this.username}> has disconnected`)
+      default:
+        return colors.cyan(`${time}: <${this.username}> (whisper): ${this.contents}`)
     }
   }
+
 }

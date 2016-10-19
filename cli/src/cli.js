@@ -54,12 +54,13 @@ cli
 
     // console.log(previousCommand)
 
+    console.log(command)
     switch (command) {
       case 'disconnect':
         server.end(new Message({ username, command }).toJSON() + '\n')
         break
       case 'echo':
-        // console.log(previousCommand
+        console.log(previousCommand)
         previousCommand = 'echo'
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
@@ -74,30 +75,14 @@ cli
       case (previousCommand !== null):
         server.write(new Message({ username, previousCommand, command }).toJSON() + '\n')
         break
+      // case (startsWith(command, '@', 0)):
+      //   console.log('here')
+      //   let newCommand = 'atUser'
+      //   server.write(new Message({ username, newCommand, contents }).toJSON()) + '\n'
+      //   break
       default:
-        // this.log(`Command <${command}> was not recognized, a specific command is required`)
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
     }
-
-    // if (command === 'disconnect') {
-    //   server.end(new Message({ username, command }).toJSON() + '\n')
-    // } else if (command === 'echo') {
-    //   previousCommand = 'echo'
-    //   console.log(previousCommand)
-    //   server.write(new Message({ username, command, contents }).toJSON() + '\n')
-    // } else if (command === 'broadcast') {
-    //   previousCommand = 'broadcast'
-    //   server.write(new Message({ username, command, contents }).toJSON() + '\n')
-    // } else if (command === 'users') {
-    //   server.write(new Message({ username, command }).toJSON() + '\n')
-    // } else if case (startsWith(command, '@', 0)) {
-    //   const command = '@'
-    //   server.write(new Message({ username, command, contents }).toJSON() + '\n')
-    // } else if (previousCommand !== null) {
-    //   server.write(new Message({ username, previousCommand, command }).toJSON() + '\n')
-    // } else {
-    //   this.log(`Command <${command}> was not recognized, a specific command is required`)
-    // }
 
     callback()
   })
