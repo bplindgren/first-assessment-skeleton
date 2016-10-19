@@ -1,6 +1,5 @@
 import vorpal from 'vorpal'
 import { words } from 'lodash'
-import { startsWith } from 'lodash'
 import { connect } from 'net'
 import { Message } from './Message'
 
@@ -72,9 +71,7 @@ cli
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
       case (previousCommand !== null):
-        this.log('here')
-        let newCommand = 'echo'
-        server.write(new Message({ username, newCommand, contents }).toJSON() + '\n')
+        server.write(new Message({ username, 'command': previousCommand, 'contents': command + contents }).toJSON() + '\n')
         break
       default:
         this.log(`Command <${command}> was not recognized`)
