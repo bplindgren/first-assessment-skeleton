@@ -1,3 +1,5 @@
+import colors from 'colors'
+
 export class Message {
   static fromJSON (buffer) {
     return new Message(JSON.parse(buffer.toString()))
@@ -20,11 +22,15 @@ export class Message {
   toString () {
     let time = new Date()
     if (this.command === 'echo') {
-      return `${time} <${this.username}> (${this.command}): ${this.contents}`
+      return colors.green(`${time} <${this.username}> (${this.command}): ${this.contents}`)
     } else if (this.command === 'broadcast') {
-      return `${time} <${this.username}> (${this.command}): ${this.contents}`
+      return colors.america(`${time} <${this.username}> (all): ${this.contents}`)
     } else if (this.command === 'users') {
-      return `${this.contents}`
+      return colors.white(`${time}: currently connected users: \n${this.contents}`)
+    } else if (this.command === 'connect') {
+      return colors.blue(`connection alert: \n ${time}: <${this.username}> has connected`)
+    } else if (this.command === 'disconnect') {
+      return colors.red(`connection alert: \n ${time}: <${this.username}> has disconnected`)
     }
   }
 }
