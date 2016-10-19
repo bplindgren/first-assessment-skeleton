@@ -64,14 +64,14 @@ cli
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
       case (command === 'users'):
-        previousCommand = command
         server.write(new Message({ username, command }).toJSON() + '\n')
         break
       case (command[0] === '@'):
+        previousCommand = command
         server.write(new Message({ username, command, contents }).toJSON() + '\n')
         break
       case (previousCommand !== null):
-        server.write(new Message({ username, 'command': previousCommand, 'contents': command + contents }).toJSON() + '\n')
+        server.write(new Message({ username, 'command': previousCommand, 'contents': [command, contents].join(' ') }).toJSON() + '\n')
         break
       default:
         this.log(`Command <${command}> was not recognized`)

@@ -35,7 +35,7 @@ export class Message {
       case (this.command[0] === '@'):
         return colors.cyan(`${time}: <${this.username}> (whisper): ${this.contents}`)
       default:
-        return 'hey'
+        return '404 error. So embarrassing'
     }
   }
 
