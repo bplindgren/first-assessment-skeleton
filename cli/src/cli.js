@@ -10,6 +10,7 @@ let username
 let server
 let host
 let port
+let previousCommand
 
 cli
   .delimiter(cli.chalk['yellow']('ftd~$'))
@@ -21,6 +22,7 @@ cli
     username = args.username
     host = args.host
     port = args.port
+    previousCommand = null
 
     // if a host and port are specified
     if (host && port) {
@@ -50,27 +52,52 @@ cli
     const [ command, ...rest ] = words(input)
     const contents = rest.join(' ')
 
-    let previousCommand = null
+    // console.log(previousCommand)
 
-    if (command === 'disconnect') {
-      server.end(new Message({ username, command }).toJSON() + '\n')
-    } else if (command === 'echo') {
-      previousCommand = 'echo'
-      console.log(previousCommand)
-      server.write(new Message({ username, command, contents }).toJSON() + '\n')
-    } else if (command === 'broadcast') {
-      previousCommand = 'broadcast'
-      server.write(new Message({ username, command, contents }).toJSON() + '\n')
-    } else if (command === 'users') {
-      server.write(new Message({ username, command }).toJSON() + '\n')
-    } else if (startsWith(command, '@', 0)) {
-      const command = '@'
-      server.write(new Message({ username, command, contents }).toJSON() + '\n')
-    } else if (previousCommand) {
-      server.write(new Message({ username, previousCommand, contents }).toJSON() + '\n')
-    } else {
-      this.log(`Command <${command}> was not recognized, a specific command is required`)
+    switch (command) {
+      case 'disconnect':
+        server.end(new Message({ username, command }).toJSON() + '\n')
+        break
+      case 'echo':
+        // console.log(previousCommand
+        previousCommand = 'echo'
+        server.write(new Message({ username, command, contents }).toJSON() + '\n')
+        break
+      case 'broadcast':
+        // console.log(previousCommand)
+        previousCommand = 'broadcast'
+        server.write(new Message({ username, command, contents }).toJSON() + '\n')
+        break
+      case 'users':
+        server.write(new Message({ username, command }).toJSON() + '\n')
+        break
+      case (previousCommand !== null):
+        server.write(new Message({ username, previousCommand, command }).toJSON() + '\n')
+        break
+      default:
+        // this.log(`Command <${command}> was not recognized, a specific command is required`)
+        server.write(new Message({ username, command, contents }).toJSON() + '\n')
     }
+
+    // if (command === 'disconnect') {
+    //   server.end(new Message({ username, command }).toJSON() + '\n')
+    // } else if (command === 'echo') {
+    //   previousCommand = 'echo'
+    //   console.log(previousCommand)
+    //   server.write(new Message({ username, command, contents }).toJSON() + '\n')
+    // } else if (command === 'broadcast') {
+    //   previousCommand = 'broadcast'
+    //   server.write(new Message({ username, command, contents }).toJSON() + '\n')
+    // } else if (command === 'users') {
+    //   server.write(new Message({ username, command }).toJSON() + '\n')
+    // } else if case (startsWith(command, '@', 0)) {
+    //   const command = '@'
+    //   server.write(new Message({ username, command, contents }).toJSON() + '\n')
+    // } else if (previousCommand !== null) {
+    //   server.write(new Message({ username, previousCommand, command }).toJSON() + '\n')
+    // } else {
+    //   this.log(`Command <${command}> was not recognized, a specific command is required`)
+    // }
 
     callback()
   })

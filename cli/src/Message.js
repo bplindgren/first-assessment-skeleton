@@ -28,9 +28,11 @@ export class Message {
     } else if (this.command === 'users') {
       return colors.white(`${time}: currently connected users: \n${this.contents}`)
     } else if (this.command === 'connect') {
-      return colors.blue(`connection alert: \n ${time}: <${this.username}> has connected`)
+      return colors.blue(`${time}: <${this.username}> has connected`)
     } else if (this.command === 'disconnect') {
-      return colors.red(`connection alert: \n ${time}: <${this.username}> has disconnected`)
+      return colors.red(`${time}: <${this.username}> has disconnected`)
+    } else {
+      return colors.cyan(`${time}: <${this.username}> (whisper): ${this.contents}`)
     }
   }
 }
