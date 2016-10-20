@@ -29,7 +29,7 @@ export class Message {
       case (this.command === 'users') :
         return colors.white(`${time}: currently connected users: \n${this.contents}`)
       case (this.command === 'connect') :
-        return colors.blue(`${time}: <${this.username}> has connected`)
+        return colors.blue(`${time}: <${this.username}> ${this.contents}`)
       case (this.command === 'disconnect'):
         return colors.red(`${time}: <${this.username}> has disconnected`)
       case (this.command[0] === '@'):
