@@ -105,13 +105,13 @@ public class ClientHandler implements Runnable {
 							log.info("User <{}> has sent a direct message to <{}>, saying <{}>", message.getUsername(), message.getCommand(), message.getContents());
 							// Get the socket info for the message recepient
 							Socket destination = Server.connectedClients.get(message.getCommand().substring(1));
-							// If user attempeted to send a message to a client that isn't logged in, alert them
+							// If user attempeted to send a message to a user that isn't logged in, alert them
 							if (destination == null) {
-								// Get the socket info for the message sender
-								Socket original = Server.connectedClients.get(message.getUsername());
 								// Alert the user that they made an error
 								message.setContents("You attempted to send a message to " + message.getCommand() + ", but no user is logged in with that username");
-								sendClientMessage(message, original);
+								String errorResponse = mapper.writeValueAsString(message);
+								writer.write(errorResponse);
+								writer.flush();
 								break;
 							} else {
 								sendClientMessage(message, destination);
