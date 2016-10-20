@@ -30,6 +30,7 @@ public class ClientHandler implements Runnable {
 	public void run() {
 		try {
 
+			// mapper object converts objects (in this case Message objects) into a format that's "JSON ready"
 			ObjectMapper mapper = new ObjectMapper();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -85,27 +86,27 @@ public class ClientHandler implements Runnable {
 						log.info("user <{}> requested all users", message.getUsername());
 						// Get the connected users
 						Set<String> users = Server.connectedClients.keySet();
-						// Set the contents of the message to users.toString
-						String usersString = new String();
 						
-						// Add a newline to the end of each user so it's prints out nicely
+						// Build the contents string
+						String usersString = new String();
+						// Add a newline to the end of each user so it prints out nicely
 						for (String user : users) {
 							usersString += (user + '\n');
 						}
-						
-						// Chop off the last newline character to it prints nicely to the console.
+						// Remove the last newline character so it prints nicely to the console
 						message.setContents(usersString.substring(0, usersString.length()-1));
+						
 						String allUsers = mapper.writeValueAsString(message);
 						writer.write(allUsers);
 						writer.flush();
 						break;
 					default:
-						// if the command has an @ symbol in the front
+						// if the command begins with an @ symbol
 						if (message.getCommand().matches("[@].+")) {			                
 							log.info("User <{}> has sent a direct message to <{}>, saying <{}>", message.getUsername(), message.getCommand(), message.getContents());
 							// Get the socket info for the message recepient
 							Socket destination = Server.connectedClients.get(message.getCommand().substring(1));
-							// If user attempeted to send a message to a user that isn't logged in, alert them
+							// If message sender attempeted to send a message to a user that isn't logged in, alert them
 							if (destination == null) {
 								// Alert the user that they made an error
 								message.setContents("You attempted to send a message to " + message.getCommand() + ", but no user is logged in with that username");
@@ -117,9 +118,14 @@ public class ClientHandler implements Runnable {
 								sendClientMessage(message, destination);
 								break;
 							}
-						// If it doesn't start with @
+						// If it doesn't start with @...
+						// No message should even get here anyway, the JS client won't even be able to send it 
 						} else {
-							message.getContents();
+							message.setContents("The server did not recognize this command");
+							String errorResponse = mapper.writeValueAsString(message);
+							writer.write(errorResponse);
+							writer.flush();
+							break;
 						}
 				}
 			}
