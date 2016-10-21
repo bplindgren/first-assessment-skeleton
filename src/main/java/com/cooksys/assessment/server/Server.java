@@ -50,7 +50,7 @@ public class Server implements Runnable {
 	}
 	
 	/**
-	 * The method used to send (broadcast) a message to all clients. Because two threads could call this
+	 * Used to send (broadcast) a message to all clients. Because two threads could call this
 	 * method at the same time, it is synchronized to ensure that all clients receive the
 	 * broadcasted messages in the same order. 
 	 * @throws IOException
@@ -58,13 +58,11 @@ public class Server implements Runnable {
 	public static synchronized void broadcast() throws IOException {
 		// Get the message to send to all the clients
 		Message m = broadcastQ.remove();
-		// Iterate over the connectedClients and send each the message
-		// This method ensures that the broadcasts will not be out of order
 		for (String key: connectedClients.keySet()) {
 			// Create a buffered writer for each client
 			BufferedWriter output = new BufferedWriter(new OutputStreamWriter(connectedClients.get(key).getOutputStream()));
 			
-			//Create the gson object necessary to convert the message object to JSON
+			// Create a gson object necessary to convert the message object to JSON
 			GsonBuilder builder = new GsonBuilder();
 	        Gson gson = builder.create();
 	        

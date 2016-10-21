@@ -84,16 +84,16 @@ public class ClientHandler implements Runnable {
 						break;
 					case "users":
 						log.info("user <{}> requested all users", message.getUsername());
-						// Get the connected users
+						// Get the set of connected users
 						Set<String> users = Server.connectedClients.keySet();
 						
 						// Build the contents string
 						String usersString = new String();
-						// Add a newline to the end of each user so it prints out nicely
+						// Add a newline to the end of each user so they print out on new lines
 						for (String user : users) {
 							usersString += (user + '\n');
 						}
-						// Remove the last newline character so it prints nicely to the console
+						// Remove the last newline character from the string
 						message.setContents(usersString.substring(0, usersString.length()-1));
 						
 						String allUsers = mapper.writeValueAsString(message);
@@ -145,7 +145,7 @@ public class ClientHandler implements Runnable {
 	public void sendClientMessage(Message message, Socket socket) throws IOException {
 		BufferedWriter output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		
-		//Create the gson object necessary to convert the message object to JSON
+		//Create a gson object necessary to convert the message object to JSON
 		GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         
